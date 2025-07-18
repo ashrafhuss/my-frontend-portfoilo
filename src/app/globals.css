@@ -1,26 +1,105 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: #000;
+  --color-foreground: #fff;
+  --color-card: #111;
+  --color-card-foreground: #fff;
+  --color-popover: #111;
+  --color-popover-foreground: #fff;
+  --color-primary: #fff;
+  --color-primary-foreground: #000;
+  --color-secondary: #222;
+  --color-secondary-foreground: #fff;
+  --color-muted: #222;
+  --color-muted-foreground: #aaa;
+  --color-accent: #333;
+  --color-accent-foreground: #fff;
+  --color-destructive: #ff5555;
+  --color-border: #222;
+  --color-input: #222;
+  --color-ring: #333;
+  --color-sidebar: #111;
+  --color-sidebar-foreground: #fff;
+  --color-sidebar-primary: #fff;
+  --color-sidebar-primary-foreground: #000;
+  --color-sidebar-accent: #333;
+  --color-sidebar-accent-foreground: #fff;
+  --color-sidebar-border: #222;
+  --color-sidebar-ring: #333;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --radius: 0.625rem;
+  --background: #000;
+  --foreground: #fff;
+  --card: #111;
+  --card-foreground: #fff;
+  --popover: #111;
+  --popover-foreground: #fff;
+  --primary: #fff;
+  --primary-foreground: #000;
+  --secondary: #222;
+  --secondary-foreground: #fff;
+  --muted: #222;
+  --muted-foreground: #aaa;
+  --accent: #333;
+  --accent-foreground: #fff;
+  --destructive: #ff5555;
+  --border: #222;
+  --input: #222;
+  --ring: #333;
+  --sidebar: #111;
+  --sidebar-foreground: #fff;
+  --sidebar-primary: #fff;
+  --sidebar-primary-foreground: #000;
+  --sidebar-accent: #333;
+  --sidebar-accent-foreground: #fff;
+  --sidebar-border: #222;
+  --sidebar-ring: #333;
+}
+
+.dark {
+  --background: #000;
+  --foreground: #fff;
+  --card: #111;
+  --card-foreground: #fff;
+  --popover: #111;
+  --popover-foreground: #fff;
+  --primary: #fff;
+  --primary-foreground: #000;
+  --secondary: #222;
+  --secondary-foreground: #fff;
+  --muted: #222;
+  --muted-foreground: #aaa;
+  --accent: #333;
+  --accent-foreground: #fff;
+  --destructive: #ff5555;
+  --border: #222;
+  --input: #222;
+  --ring: #333;
+  --sidebar: #111;
+  --sidebar-foreground: #fff;
+  --sidebar-primary: #fff;
+  --sidebar-primary-foreground: #000;
+  --sidebar-accent: #333;
+  --sidebar-accent-foreground: #fff;
+  --sidebar-border: #222;
+  --sidebar-ring: #333;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    @apply bg-background text-foreground;
+  }
 }

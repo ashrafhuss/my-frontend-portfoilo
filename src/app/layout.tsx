@@ -23,9 +23,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen w-full relative`}
+        style={{
+          background: "radial-gradient(125% 125% at 50% 90%, #000000 40%, #072607 100%)",
+        }}
       >
         {children}
       </body>
