@@ -35,12 +35,12 @@ export function ContactSection() {
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-6xl lg:text-7xl font-black mb-6">
+          <h2 className="text-4xl lg:text-5xl font-black mb-6">
             <span className="text-white font-mono">{"<"}</span>
             <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
               Contact
             </span>
-            <span className="text-white font-mono">{" />"}</span>
+            <span className="text-white font-mono">{"/>"}</span>
           </h2>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Ready to work together? Drop me a message and let's create something amazing.

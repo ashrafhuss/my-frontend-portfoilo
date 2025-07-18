@@ -1,4 +1,7 @@
-import Image from "next/image";
+"use client"
+
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 import { PortfolioNavbar } from "./_components/Navbar";
 import { HeroSection } from "./_components/Hero";
 import { AboutSection } from "./_components/About";
@@ -8,7 +11,15 @@ import { ContactSection } from "./_components/Contact";
 import { TestimonialsSection } from "./_components/Testemonial";
 import { Footer } from "./_components/Footer";
 
+
 export default function Home() {
+
+  const { resolvedTheme } = useTheme();
+  const [color, setColor] = useState("#ffffff");
+
+  useEffect(() => {
+    setColor(resolvedTheme === "dark" ? "#ffffff" : "#000000");
+  }, [resolvedTheme]);
   return (
    <>
    <PortfolioNavbar />

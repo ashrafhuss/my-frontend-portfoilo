@@ -136,7 +136,7 @@ export function ProjectsSection() {
             <Code className="w-4 h-4" />
             Featured Work
           </div>
-          <h2 className="text-5xl lg:text-6xl font-black mb-6">
+          <h2 className="text-4xl lg:text-5xl font-black mb-6">
             <span className="text-white font-mono">{"<"}</span>
             <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
               Projects

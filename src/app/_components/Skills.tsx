@@ -134,12 +134,12 @@ export function SkillsSection() {
             <Zap className="w-4 h-4" />
             Technical Expertise
           </div>
-          <h2 className="text-6xl lg:text-7xl font-black mb-6">
+          <h2 className="text-4xl lg:text-5xl font-black mb-6">
             <span className="text-white font-mono">{"<"}</span>
             <span className="bg-gradient-to-r from-purple-400 via-blue-400 to-green-400 bg-clip-text text-transparent">
               Skills
             </span>
-            <span className="text-white font-mono">{" />"}</span>
+            <span className="text-white font-mono">{"/>"}</span>
           </h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
             A comprehensive overview of my technical skills, tools, and technologies I use to build exceptional digital
