@@ -6,6 +6,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter } from "lucide-react"
+import { useState } from "react";
+import Link from "next/link"
 
 export function ContactSection() {
   const [formData, setFormData] = React.useState({
@@ -13,15 +15,44 @@ export function ContactSection() {
     email: "",
     message: "",
   })
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<string | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Handle form submission here
-    console.log("Form submitted:", formData)
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setStatus(null);
+    try {
+      const res = await fetch("https://api.emailjs.com/api/v1.0/email/send-form", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          service_id: "service_gmail",
+          template_id: "bvy61lg",
+          user_id: "dRQgkwReaqlzLtiaKv0f1",
+          template_params: {
+            from_name: formData.name,
+            from_email: formData.email,
+            message: formData.message,
+            to_email: "sherazarifofficial@gmail.com",
+          },
+        }),
+      });
+      if (res.ok) {
+        setStatus("Your message has been sent! Thank you.");
+        setFormData({ name: "", email: "", message: "" });
+      } else {
+        setStatus("Something went wrong. Please try again later.");
+      }
+    } catch {
+      setStatus("Something went wrong. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -88,10 +119,12 @@ export function ContactSection() {
                 <Button
                   type="submit"
                   className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0 h-12 text-lg font-semibold"
+                  disabled={loading}
                 >
                   <Send className="w-5 h-5 mr-2" />
-                  Send Message
+                  {loading ? "Sending..." : "Send Message"}
                 </Button>
+                {status && <div className="text-center text-emerald-400 mt-2">{status}</div>}
               </form>
             </CardContent>
           </Card>
@@ -114,7 +147,7 @@ export function ContactSection() {
                 </div>
                 <div>
                   <p className="text-white font-semibold">Email</p>
-                  <p className="text-gray-400">alex@developer.com</p>
+                  <Link  href={"mailto:sherazarifofficial@gmail.,com"} className="cursor-pointer text-gray-400">sherazarifofficial@gmail.com</Link>
                 </div>
               </div>
 
@@ -124,7 +157,7 @@ export function ContactSection() {
                 </div>
                 <div>
                   <p className="text-white font-semibold">Phone</p>
-                  <p className="text-gray-400">+1 (555) 123-4567</p>
+                  <p className="text-gray-400">+923095533003</p>
                 </div>
               </div>
 
@@ -134,38 +167,12 @@ export function ContactSection() {
                 </div>
                 <div>
                   <p className="text-white font-semibold">Location</p>
-                  <p className="text-gray-400">San Francisco, CA</p>
+                  <p className="text-gray-400">Lahore, Pakistan</p>
                 </div>
               </div>
             </div>
 
             {/* Social Links */}
-            <div>
-              <h4 className="text-lg font-semibold text-white mb-4">Follow Me</h4>
-              <div className="flex gap-4">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="bg-white/5 border-white/20 text-white hover:bg-white hover:text-black w-12 h-12"
-                >
-                  <Github className="w-5 h-5" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="bg-white/5 border-white/20 text-white hover:bg-white hover:text-black w-12 h-12"
-                >
-                  <Linkedin className="w-5 h-5" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="bg-white/5 border-white/20 text-white hover:bg-white hover:text-black w-12 h-12"
-                >
-                  <Twitter className="w-5 h-5" />
-                </Button>
-              </div>
-            </div>
           </div>
         </div>
       </div>

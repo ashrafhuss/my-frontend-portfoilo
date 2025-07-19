@@ -3,6 +3,7 @@
 import * as React from "react"
 import { Button } from "@/components/ui/button"
 import { Github, Linkedin, Twitter, Mail, Heart, ArrowUp, Code, Coffee, MapPin, Phone } from "lucide-react"
+import Link from "next/link"
 
 export function Footer() {
   const [showScrollTop, setShowScrollTop] = React.useState(false)
@@ -50,15 +51,15 @@ export function Footer() {
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-gray-400">
                 <Mail className="w-4 h-4 text-blue-400" />
-                <span>alex@developer.com</span>
+                <span>sherazarifofficial@gmail.com</span>
               </div>
               <div className="flex items-center gap-3 text-gray-400">
                 <Phone className="w-4 h-4 text-green-400" />
-                <span>+1 (555) 123-4567</span>
+                <span>+923095533003</span>
               </div>
               <div className="flex items-center gap-3 text-gray-400">
                 <MapPin className="w-4 h-4 text-purple-400" />
-                <span>San Francisco, CA</span>
+                <span>Lahore, Pkistan</span>
               </div>
             </div>
           </div>
@@ -105,21 +106,21 @@ export function Footer() {
               <h4 className="text-lg font-semibold text-white mb-4">Let's Connect</h4>
               <div className="flex gap-4">
                 {[
-                  { icon: Github, label: "GitHub", color: "hover:bg-gray-600" },
-                  { icon: Linkedin, label: "LinkedIn", color: "hover:bg-blue-600" },
-                  { icon: Twitter, label: "Twitter", color: "hover:bg-sky-500" },
-                  { icon: Mail, label: "Email", color: "hover:bg-red-500" },
+                  { icon: Github, href:"https://github.com/SherazArif172/", label: "GitHub", color: "hover:bg-gray-600" },
+                  { icon: Linkedin, href:"https://www.linkedin.com/in/sherazarifofficial/", label: "LinkedIn", color: "hover:bg-blue-600" },
+                  { icon: Mail, href:"mailto:sherazarifofficial@gmail.com", label: "Email", color: "hover:bg-red-500" },
                 ].map((social) => {
                   const Icon = social.icon
                   return (
+                    <Link  key={social.label} href={social.href}>
                     <Button
-                      key={social.label}
                       variant="outline"
                       size="icon"
                       className={`bg-white/5 border-white/20 text-white transition-all duration-300 ${social.color} hover:text-white hover:scale-110`}
                     >
                       <Icon className="w-5 h-5" />
                     </Button>
+                    </Link>
                   )
                 })}
               </div>
