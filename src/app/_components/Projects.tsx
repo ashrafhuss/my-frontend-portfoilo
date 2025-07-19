@@ -4,13 +4,18 @@ import * as React from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { ExternalLink, Github, Play, Code, Smartphone, Globe, Database, Zap, Star, Eye, GitBranch } from "lucide-react"
+import pack from '../../../public/images/img1.png'
+import Link from "next/link"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
+import { motion, AnimatePresence } from "framer-motion";
 
 const projects = [
   {
     id: 1,
-    title: "E-Commerce Platform",
+    title: "Noshly",
     description: "Full-stack e-commerce solution with real-time inventory, payment processing, and admin dashboard.",
-    image: "/placeholder.svg?height=300&width=500",
+    details: "Noshly is a robust e-commerce platform featuring real-time inventory management, secure payment processing, and a comprehensive admin dashboard for analytics and order management. Built with React, Node.js, and AWS for scalability.",
+    image: "/images/img3.png",
     category: "fullstack",
     tech: ["React", "Node.js", "PostgreSQL", "Stripe", "AWS"],
     github: "https://github.com",
@@ -20,109 +25,77 @@ const projects = [
     status: "completed",
   },
   {
-    id: 2,
-    title: "AI Chat Application",
-    description: "Real-time chat app with AI integration, voice messages, and smart reply suggestions.",
-    image: "/placeholder.svg?height=300&width=500",
-    category: "ai",
-    tech: ["Next.js", "OpenAI", "Socket.io", "MongoDB", "Tailwind"],
-    github: "https://github.com",
-    live: "https://demo.com",
-    stats: { stars: 89, forks: 23, views: "1.8k" },
-    featured: true,
-    status: "completed",
-  },
-  {
     id: 3,
-    title: "Mobile Fitness Tracker",
-    description: "Cross-platform mobile app for fitness tracking with social features and workout plans.",
-    image: "/placeholder.svg?height=300&width=500",
-    category: "mobile",
-    tech: ["React Native", "Firebase", "Redux", "Expo"],
-    github: "https://github.com",
-    live: "https://demo.com",
-    stats: { stars: 67, forks: 18, views: "1.2k" },
-    featured: false,
-    status: "completed",
-  },
-  {
-    id: 4,
-    title: "Data Visualization Dashboard",
-    description: "Interactive dashboard for complex data analysis with real-time charts and reporting.",
-    image: "/placeholder.svg?height=300&width=500",
-    category: "data",
-    tech: ["Vue.js", "D3.js", "Python", "FastAPI", "Docker"],
-    github: "https://github.com",
-    live: "https://demo.com",
-    stats: { stars: 156, forks: 34, views: "3.1k" },
+    title: "Pack & Track Courier Portal",
+    description: "A full-featured courier and logistics management system that enables users to book shipments, track deliveries in real-time, and manage orders efficiently.",
+    details: "Pack & Track is a logistics management system with real-time shipment tracking, user-friendly booking, and efficient order management. Built using Next.js, MongoDB, and JWT Auth for secure and scalable operations.",
+    image: "/images/img1.png", // Replace with actual screenshot
+    category: "logistics",
+    tech: ["Next.js", "Tailwind CSS", "Node.js", "MongoDB", "Express", "JWT Auth"],
+    live: "https://portal.packandtrackds.com/",
     featured: true,
-    status: "completed",
+    status: "complete"
   },
   {
     id: 5,
-    title: "Blockchain Voting System",
-    description: "Secure voting platform using blockchain technology for transparency and immutability.",
-    image: "/placeholder.svg?height=300&width=500",
-    category: "blockchain",
-    tech: ["Solidity", "Web3.js", "React", "Ethereum", "IPFS"],
-    github: "https://github.com",
-    live: "https://demo.com",
-    stats: { stars: 203, forks: 67, views: "4.5k" },
-    featured: false,
-    status: "in-progress",
-  },
-  {
-    id: 6,
-    title: "SaaS Analytics Tool",
-    description: "Comprehensive analytics platform for SaaS businesses with subscription management.",
-    image: "/placeholder.svg?height=300&width=500",
+    title: "Car Rental",
+    description: "A modern car rental platform that allows users to browse, book, and manage rental vehicles seamlessly in real-time.",
+    details: "Car Rental is a modern platform for browsing, booking, and managing rental vehicles. Features real-time availability, secure payments, and a user-friendly dashboard. Built with Next.js, MongoDB, and Stripe integration.",
+    image: "/images/img2.png", // Replace with your actual image path
     category: "saas",
-    tech: ["Next.js", "Prisma", "PostgreSQL", "Stripe", "Vercel"],
-    github: "https://github.com",
-    live: "https://demo.com",
-    stats: { stars: 91, forks: 28, views: "2.7k" },
-    featured: false,
-    status: "completed",
+    tech: ["Next.js", "Tailwind CSS", "MongoDB", "Node.js", "Stripe"],
+    github: "https://github.com/yourusername/car-rental",
+    live: "https://car-rental-demo.com",
+    featured: true,
+    status: "in-progress"
   },
+  
 ]
 
 const categories = [
   { id: "all", name: "All Projects", icon: Globe, count: projects.length },
   { id: "fullstack", name: "Full Stack", icon: Code, count: projects.filter((p) => p.category === "fullstack").length },
-  { id: "ai", name: "AI/ML", icon: Zap, count: projects.filter((p) => p.category === "ai").length },
-  { id: "mobile", name: "Mobile", icon: Smartphone, count: projects.filter((p) => p.category === "mobile").length },
-  { id: "data", name: "Data Viz", icon: Database, count: projects.filter((p) => p.category === "data").length },
-  {
-    id: "blockchain",
-    name: "Blockchain",
-    icon: GitBranch,
-    count: projects.filter((p) => p.category === "blockchain").length,
-  },
   { id: "saas", name: "SaaS", icon: Star, count: projects.filter((p) => p.category === "saas").length },
 ]
 
 export function ProjectsSection() {
   const [activeCategory, setActiveCategory] = React.useState("all")
   const [hoveredProject, setHoveredProject] = React.useState<number | null>(null)
-  const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 })
+  const [mousePosition, setMousePosition] = React.useState<{ [key: number]: { x: number; y: number } }>({})
+  const [selectedProject, setSelectedProject] = React.useState<typeof projects[0] | null>(null);
+  const [dialogOpen, setDialogOpen] = React.useState(false);
 
   const filteredProjects =
     activeCategory === "all" ? projects : projects.filter((project) => project.category === activeCategory)
 
-  const featuredProjects = projects.filter((project) => project.featured)
-
   const handleMouseMove = (e: React.MouseEvent, projectId: number) => {
-    if (hoveredProject === projectId) {
-      const rect = e.currentTarget.getBoundingClientRect()
-      setMousePosition({
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePosition((prev) => ({
+      ...prev,
+      [projectId]: {
         x: e.clientX - rect.left,
         y: e.clientY - rect.top,
-      })
-    }
-  }
+      },
+    }));
+  };
+
+  const handleCardClick = (project: typeof projects[0]) => {
+    setSelectedProject(project);
+    setDialogOpen(true);
+  };
 
   return (
     <section id="projects" className="py-20 px-4 relative overflow-hidden">
+      {/* Modal Background Blur */}
+      {dialogOpen && (
+        <div className="fixed inset-0 z-40 pointer-events-none">
+          {/* Main blur */}
+          <div className="absolute inset-0 backdrop-blur-[8px] bg-black/40 transition-all duration-300" />
+          {/* Animated gradient orbs */}
+          <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-gradient-to-br from-emerald-500/30 via-purple-500/20 to-transparent rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-gradient-to-tr from-blue-500/20 via-pink-500/20 to-transparent rounded-full blur-2xl animate-pulse delay-1000" />
+        </div>
+      )}
       {/* Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-full blur-3xl"></div>
@@ -172,128 +145,16 @@ export function ProjectsSection() {
           })}
         </div>
 
-        {/* Featured Projects Showcase */}
-        {activeCategory === "all" && (
-          <div className="mb-20">
-            <h3 className="text-3xl font-bold text-white mb-8 text-center">⭐ Featured Projects</h3>
-            <div className="grid lg:grid-cols-2 gap-8">
-              {featuredProjects.slice(0, 2).map((project) => (
-                <Card
-                  key={project.id}
-                  className="group relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 overflow-hidden hover:border-white/40 transition-all duration-500 transform hover:scale-[1.02]"
-                  onMouseEnter={() => setHoveredProject(project.id)}
-                  onMouseLeave={() => setHoveredProject(null)}
-                  onMouseMove={(e) => handleMouseMove(e, project.id)}
-                >
-                  <CardContent className="p-0">
-                    {/* Project Image */}
-                    <div className="relative overflow-hidden">
-                      <img
-                        src={project.image || "/placeholder.svg"}
-                        alt={project.title}
-                        className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-
-                      {/* Status Badge */}
-                      <div className="absolute top-4 right-4">
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                            project.status === "completed"
-                              ? "bg-green-500/20 text-green-400 border border-green-500/30"
-                              : "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30"
-                          }`}
-                        >
-                          {project.status === "completed" ? "✓ Completed" : "🚧 In Progress"}
-                        </span>
-                      </div>
-
-                      {/* Hover Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <div className="flex gap-4">
-                          <Button size="sm" className="bg-white/20 backdrop-blur-sm text-white border-white/30">
-                            <Play className="w-4 h-4 mr-2" />
-                            Demo
-                          </Button>
-                          <Button size="sm" className="bg-white/20 backdrop-blur-sm text-white border-white/30">
-                            <Github className="w-4 h-4 mr-2" />
-                            Code
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Project Info */}
-                    <div className="p-6">
-                      <h4 className="text-2xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">
-                        {project.title}
-                      </h4>
-                      <p className="text-gray-300 mb-4 leading-relaxed">{project.description}</p>
-
-                      {/* Tech Stack */}
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {project.tech.map((tech, index) => (
-                          <span
-                            key={index}
-                            className="px-3 py-1 bg-white/10 text-gray-300 rounded-full text-sm border border-white/20"
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-
-                      {/* Stats */}
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4 text-sm text-gray-400">
-                          <div className="flex items-center gap-1">
-                            <Star className="w-4 h-4" />
-                            {project.stats.stars}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <GitBranch className="w-4 h-4" />
-                            {project.stats.forks}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Eye className="w-4 h-4" />
-                            {project.stats.views}
-                          </div>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button size="sm" variant="ghost" className="text-gray-400 hover:text-white">
-                            <ExternalLink className="w-4 h-4" />
-                          </Button>
-                          <Button size="sm" variant="ghost" className="text-gray-400 hover:text-white">
-                            <Github className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-
-                  {/* Mouse Follow Effect */}
-                  {hoveredProject === project.id && (
-                    <div
-                      className="absolute w-32 h-32 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-xl pointer-events-none transition-all duration-300"
-                      style={{
-                        left: mousePosition.x - 64,
-                        top: mousePosition.y - 64,
-                      }}
-                    />
-                  )}
-                </Card>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* All Projects Grid */}
+        {/* Only show the small cards grid for all projects */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProjects.map((project) => (
             <Card
               key={project.id}
-              className="group relative bg-white/5 backdrop-blur-sm border border-white/10 overflow-hidden hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:rotate-1"
+              className="group relative bg-white/5 backdrop-blur-sm border border-white/10 overflow-hidden transition-all duration-300 transform hover:scale-105 hover:rotate-1 hover:border-emerald-400 hover:shadow-[0_0_16px_2px_rgba(16,185,129,0.4)] cursor-pointer"
               onMouseEnter={() => setHoveredProject(project.id)}
               onMouseLeave={() => setHoveredProject(null)}
+              onMouseMove={(e) => handleMouseMove(e, project.id)}
+              onClick={() => handleCardClick(project)}
             >
               <CardContent className="p-0">
                 {/* Project Image */}
@@ -305,12 +166,30 @@ export function ProjectsSection() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
 
+                  {/* Glowing Beam Effect */}
+                  {hoveredProject === project.id && mousePosition[project.id] && (
+                    <div
+                      className="pointer-events-none absolute z-20"
+                      style={{
+                        left: mousePosition[project.id].x - 40,
+                        top: mousePosition[project.id].y - 4,
+                        width: 80,
+                        height: 8,
+                        borderRadius: 8,
+                        background:
+                          "linear-gradient(90deg,rgba(16,185,129,0) 0%,rgba(16,185,129,0.7) 50%,rgba(16,185,129,0) 100%)",
+                        boxShadow: "0 0 16px 4px rgba(16,185,129,0.5)",
+                        transition: "left 0.1s linear, top 0.1s linear",
+                      }}
+                    />
+                  )}
+
                   {/* Quick Actions */}
                   <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button size="sm" className="bg-white/20 backdrop-blur-sm text-white border-0 w-8 h-8 p-0">
+                    <Button size="sm" className="bg-white/20 backdrop-blur-sm text-white border-0 w-8 h-8 p-0" onClick={e => {e.stopPropagation(); window.open(project.live, '_blank')}}>
                       <ExternalLink className="w-4 h-4" />
                     </Button>
-                    <Button size="sm" className="bg-white/20 backdrop-blur-sm text-white border-0 w-8 h-8 p-0">
+                    <Button size="sm" className="bg-white/20 backdrop-blur-sm text-white border-0 w-8 h-8 p-0" onClick={e => {e.stopPropagation(); window.open(project.github, '_blank')}}>
                       <Github className="w-4 h-4" />
                     </Button>
                   </div>
@@ -338,43 +217,73 @@ export function ProjectsSection() {
                   </div>
 
                   {/* Stats */}
-                  <div className="flex items-center justify-between text-xs text-gray-500">
-                    <div className="flex items-center gap-3">
-                      <span className="flex items-center gap-1">
-                        <Star className="w-3 h-3" />
-                        {project.stats.stars}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Eye className="w-3 h-3" />
-                        {project.stats.views}
-                      </span>
-                    </div>
-                    <span
-                      className={`px-2 py-1 rounded ${
-                        project.status === "completed"
-                          ? "bg-green-500/20 text-green-400"
-                          : "bg-yellow-500/20 text-yellow-400"
-                      }`}
-                    >
-                      {project.status === "completed" ? "Live" : "WIP"}
-                    </span>
-                  </div>
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
 
+        {/* Project Details Dialog */}
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <DialogContent className="max-w-md w-full bg-[#101a14]/95 border border-emerald-900/60 shadow-lg shadow-emerald-900/30 p-0 md:px-2 md:py-4 backdrop-blur-md">
+            {selectedProject && (
+              <>
+                <DialogHeader>
+                  <DialogTitle className="text-xl md:text-2xl text-white mb-1 font-extrabold leading-tight">{selectedProject.title}</DialogTitle>
+                  <DialogDescription className="text-sm md:text-base text-gray-300 mb-3">
+                    {selectedProject.description}
+                  </DialogDescription>
+                </DialogHeader>
+                <img
+                  src={selectedProject.image || "/placeholder.svg"}
+                  className="w-full object-contain rounded-lg mb-3 shadow-lg bg-black"
+                />
+                <div className="mb-3 text-gray-200 whitespace-pre-line text-sm md:text-base leading-relaxed">
+                  {selectedProject.details}
+                </div>
+                <div className="mb-2">
+                  <span className="font-semibold text-white text-sm block mb-2">Tech Stack:</span>
+                  <div className="flex flex-wrap gap-2">
+                    <AnimatePresence>
+                      {selectedProject.tech.map((tech, idx) => (
+                        <motion.span
+                          key={tech}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 10 }}
+                          transition={{ delay: idx * 0.07, duration: 0.3 }}
+                          className="px-3 py-1 rounded-full bg-emerald-900/60 text-emerald-200 text-xs font-semibold shadow shadow-emerald-900/20 border border-emerald-700/40 backdrop-blur-sm"
+                        >
+                          {tech}
+                        </motion.span>
+                      ))}
+                    </AnimatePresence>
+                  </div>
+                </div>
+                <div className="flex gap-4 mb-2">
+                  {selectedProject.github && (
+                    <a href={selectedProject.github} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline text-sm">GitHub</a>
+                  )}
+                  {selectedProject.live && (
+                    <a href={selectedProject.live} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline text-sm">Live Demo</a>
+                  )}
+                </div>
+
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
+
         {/* Call to Action */}
         <div className="text-center mt-16">
           <p className="text-gray-400 mb-6">Want to see more of my work?</p>
-          <Button
+          <Link href={"http://github.com/sherazArif172/"} className="cursor-pointer"><Button
             size="lg"
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 px-8 py-6 text-lg font-semibold rounded-full"
+            className="cursor-pointer bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 px-8 py-6 text-lg font-semibold rounded-full"
           >
             <Github className="w-5 h-5 mr-2" />
             View All on GitHub
-          </Button>
+          </Button></Link>
         </div>
       </div>
     </section>
