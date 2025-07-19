@@ -20,7 +20,7 @@ export function HeroSection() {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden top-10"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden lg:top-15 top-24"
     >
       {/* Animated Background Elements */}
       <div className="absolute inset-0">

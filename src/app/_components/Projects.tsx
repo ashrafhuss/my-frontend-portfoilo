@@ -1,72 +1,119 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { ExternalLink, Github, Play, Code, Smartphone, Globe, Database, Zap, Star, Eye, GitBranch } from "lucide-react"
-import pack from '../../../public/images/img1.png'
-import Link from "next/link"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
+import * as React from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  ExternalLink,
+  Github,
+  Play,
+  Code,
+  Smartphone,
+  Globe,
+  Database,
+  Zap,
+  Star,
+  Eye,
+  GitBranch,
+} from "lucide-react";
+import pack from "../../../public/images/img1.png";
+import Link from "next/link";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+} from "@/components/ui/dialog";
 import { motion, AnimatePresence } from "framer-motion";
 
 const projects = [
   {
     id: 1,
     title: "Noshly",
-    description: "Full-stack e-commerce solution with real-time inventory, payment processing, and admin dashboard.",
-    details: "Noshly is a robust e-commerce platform featuring real-time inventory management, secure payment processing, and a comprehensive admin dashboard for analytics and order management. Built with React, Node.js, and AWS for scalability.",
+    description:
+      "Chef-focused web app where culinary events are created, managed, and booked.",
+    details:
+      "Noshly is a chef-centric platform designed for creating and managing culinary events. Chefs can host cooking classes, tasting sessions, and pop-up dinners, while users can browse and book events in real time. The platform includes secure payment integration, event management tools, and an admin dashboard for monitoring activities. Built with React, Node.js, and AWS for performance and scalability.",
     image: "/images/img3.png",
     category: "fullstack",
     tech: ["React", "Node.js", "PostgreSQL", "Stripe", "AWS"],
-    github: "https://github.com",
-    live: "https://demo.com",
-    stats: { stars: 124, forks: 45, views: "2.3k" },
+    live: "https://noshly.io/",
     featured: true,
     status: "completed",
   },
+
   {
     id: 3,
     title: "Pack & Track Courier Portal",
-    description: "A full-featured courier and logistics management system that enables users to book shipments, track deliveries in real-time, and manage orders efficiently.",
-    details: "Pack & Track is a logistics management system with real-time shipment tracking, user-friendly booking, and efficient order management. Built using Next.js, MongoDB, and JWT Auth for secure and scalable operations.",
-    image: "/images/img1.png", // Replace with actual screenshot
+    description:
+      "A full-featured courier and logistics management system that enables users to book shipments, track deliveries in real-time, and manage orders efficiently.",
+    details:
+      "Pack & Track is a logistics management system with real-time shipment tracking, user-friendly booking, and efficient order management. Built using Next.js, MongoDB, and JWT Auth for secure and scalable operations.",
+    image: "/images/img1.png",
     category: "logistics",
-    tech: ["Next.js", "Tailwind CSS", "Node.js", "MongoDB", "Express", "JWT Auth"],
+    tech: [
+      "Next.js",
+      "Tailwind CSS",
+      "Node.js",
+      "MongoDB",
+      "Express",
+      "JWT Auth",
+    ],
     live: "https://portal.packandtrackds.com/",
     featured: true,
-    status: "complete"
+    status: "complete",
   },
   {
     id: 5,
     title: "Car Rental",
-    description: "A modern car rental platform that allows users to browse, book, and manage rental vehicles seamlessly in real-time.",
-    details: "Car Rental is a modern platform for browsing, booking, and managing rental vehicles. Features real-time availability, secure payments, and a user-friendly dashboard. Built with Next.js, MongoDB, and Stripe integration.",
-    image: "/images/img2.png", // Replace with your actual image path
+    description:
+      "A modern car rental platform that allows users to browse, book, and manage rental vehicles seamlessly in real-time.",
+    details:
+      "Car Rental is a modern platform for browsing, booking, and managing rental vehicles. Features real-time availability, secure payments, and a user-friendly dashboard. Built with Next.js, MongoDB, and Stripe integration.",
+    image: "/images/img2.png",
     category: "saas",
     tech: ["Next.js", "Tailwind CSS", "MongoDB", "Node.js", "Stripe"],
-    github: "https://github.com/yourusername/car-rental",
-    live: "https://car-rental-demo.com",
+    live: "https://rentalx-frontend.vercel.app/",
     featured: true,
-    status: "in-progress"
+    status: "in-progress",
   },
-  
-]
+];
 
 const categories = [
   { id: "all", name: "All Projects", icon: Globe, count: projects.length },
-  { id: "fullstack", name: "Full Stack", icon: Code, count: projects.filter((p) => p.category === "fullstack").length },
-  { id: "saas", name: "SaaS", icon: Star, count: projects.filter((p) => p.category === "saas").length },
-]
+  {
+    id: "fullstack",
+    name: "Full Stack",
+    icon: Code,
+    count: projects.filter((p) => p.category === "fullstack").length,
+  },
+  {
+    id: "saas",
+    name: "SaaS",
+    icon: Star,
+    count: projects.filter((p) => p.category === "saas").length,
+  },
+];
 
 export function ProjectsSection() {
-  const [activeCategory, setActiveCategory] = React.useState("all")
-  const [hoveredProject, setHoveredProject] = React.useState<number | null>(null)
-  const [mousePosition, setMousePosition] = React.useState<{ [key: number]: { x: number; y: number } }>({})
-  const [selectedProject, setSelectedProject] = React.useState<typeof projects[0] | null>(null);
+  const [activeCategory, setActiveCategory] = React.useState("all");
+  const [hoveredProject, setHoveredProject] = React.useState<number | null>(
+    null
+  );
+  const [mousePosition, setMousePosition] = React.useState<{
+    [key: number]: { x: number; y: number };
+  }>({});
+  const [selectedProject, setSelectedProject] = React.useState<
+    (typeof projects)[0] | null
+  >(null);
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
   const filteredProjects =
-    activeCategory === "all" ? projects : projects.filter((project) => project.category === activeCategory)
+    activeCategory === "all"
+      ? projects
+      : projects.filter((project) => project.category === activeCategory);
 
   const handleMouseMove = (e: React.MouseEvent, projectId: number) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -79,7 +126,7 @@ export function ProjectsSection() {
     }));
   };
 
-  const handleCardClick = (project: typeof projects[0]) => {
+  const handleCardClick = (project: (typeof projects)[0]) => {
     setSelectedProject(project);
     setDialogOpen(true);
   };
@@ -117,15 +164,15 @@ export function ProjectsSection() {
             <span className="text-white font-mono">{"/>"}</span>
           </h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            A collection of projects that showcase my skills in full-stack development, AI integration, and modern web
-            technologies.
+            A collection of projects that showcase my skills in full-stack
+            development, AI integration, and modern web technologies.
           </p>
         </div>
 
         {/* Category Filter */}
         <div className="flex flex-wrap justify-center gap-4 mb-16">
           {categories.map((category) => {
-            const Icon = category.icon
+            const Icon = category.icon;
             return (
               <Button
                 key={category.id}
@@ -139,9 +186,11 @@ export function ProjectsSection() {
               >
                 <Icon className="w-4 h-4 mr-2" />
                 {category.name}
-                <span className="ml-2 text-xs bg-white/20 px-2 py-1 rounded-full">{category.count}</span>
+                <span className="ml-2 text-xs bg-white/20 px-2 py-1 rounded-full">
+                  {category.count}
+                </span>
               </Button>
-            )
+            );
           })}
         </div>
 
@@ -167,30 +216,35 @@ export function ProjectsSection() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
 
                   {/* Glowing Beam Effect */}
-                  {hoveredProject === project.id && mousePosition[project.id] && (
-                    <div
-                      className="pointer-events-none absolute z-20"
-                      style={{
-                        left: mousePosition[project.id].x - 40,
-                        top: mousePosition[project.id].y - 4,
-                        width: 80,
-                        height: 8,
-                        borderRadius: 8,
-                        background:
-                          "linear-gradient(90deg,rgba(16,185,129,0) 0%,rgba(16,185,129,0.7) 50%,rgba(16,185,129,0) 100%)",
-                        boxShadow: "0 0 16px 4px rgba(16,185,129,0.5)",
-                        transition: "left 0.1s linear, top 0.1s linear",
-                      }}
-                    />
-                  )}
+                  {hoveredProject === project.id &&
+                    mousePosition[project.id] && (
+                      <div
+                        className="pointer-events-none absolute z-20"
+                        style={{
+                          left: mousePosition[project.id].x - 40,
+                          top: mousePosition[project.id].y - 4,
+                          width: 80,
+                          height: 8,
+                          borderRadius: 8,
+                          background:
+                            "linear-gradient(90deg,rgba(16,185,129,0) 0%,rgba(16,185,129,0.7) 50%,rgba(16,185,129,0) 100%)",
+                          boxShadow: "0 0 16px 4px rgba(16,185,129,0.5)",
+                          transition: "left 0.1s linear, top 0.1s linear",
+                        }}
+                      />
+                    )}
 
                   {/* Quick Actions */}
                   <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button size="sm" className="bg-white/20 backdrop-blur-sm text-white border-0 w-8 h-8 p-0" onClick={e => {e.stopPropagation(); window.open(project.live, '_blank')}}>
+                    <Button
+                      size="sm"
+                      className="bg-white/20 backdrop-blur-sm text-white border-0 w-8 h-8 p-0"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(project.live, "_blank");
+                      }}
+                    >
                       <ExternalLink className="w-4 h-4" />
-                    </Button>
-                    <Button size="sm" className="bg-white/20 backdrop-blur-sm text-white border-0 w-8 h-8 p-0" onClick={e => {e.stopPropagation(); window.open(project.github, '_blank')}}>
-                      <Github className="w-4 h-4" />
                     </Button>
                   </div>
                 </div>
@@ -200,12 +254,17 @@ export function ProjectsSection() {
                   <h4 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
                     {project.title}
                   </h4>
-                  <p className="text-gray-400 text-sm mb-4 line-clamp-2">{project.description}</p>
+                  <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+                    {project.description}
+                  </p>
 
                   {/* Tech Stack */}
                   <div className="flex flex-wrap gap-1 mb-4">
                     {project.tech.slice(0, 3).map((tech, index) => (
-                      <span key={index} className="px-2 py-1 bg-white/10 text-gray-300 rounded text-xs">
+                      <span
+                        key={index}
+                        className="px-2 py-1 bg-white/10 text-gray-300 rounded text-xs"
+                      >
                         {tech}
                       </span>
                     ))}
@@ -229,7 +288,9 @@ export function ProjectsSection() {
             {selectedProject && (
               <>
                 <DialogHeader>
-                  <DialogTitle className="text-xl md:text-2xl text-white mb-1 font-extrabold leading-tight">{selectedProject.title}</DialogTitle>
+                  <DialogTitle className="text-xl md:text-2xl text-white mb-1 font-extrabold leading-tight">
+                    {selectedProject.title}
+                  </DialogTitle>
                   <DialogDescription className="text-sm md:text-base text-gray-300 mb-3">
                     {selectedProject.description}
                   </DialogDescription>
@@ -242,7 +303,9 @@ export function ProjectsSection() {
                   {selectedProject.details}
                 </div>
                 <div className="mb-2">
-                  <span className="font-semibold text-white text-sm block mb-2">Tech Stack:</span>
+                  <span className="font-semibold text-white text-sm block mb-2">
+                    Tech Stack:
+                  </span>
                   <div className="flex flex-wrap gap-2">
                     <AnimatePresence>
                       {selectedProject.tech.map((tech, idx) => (
@@ -261,14 +324,17 @@ export function ProjectsSection() {
                   </div>
                 </div>
                 <div className="flex gap-4 mb-2">
-                  {selectedProject.github && (
-                    <a href={selectedProject.github} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline text-sm">GitHub</a>
-                  )}
                   {selectedProject.live && (
-                    <a href={selectedProject.live} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline text-sm">Live Demo</a>
+                    <a
+                      href={selectedProject.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-emerald-400 hover:underline text-sm"
+                    >
+                      Live Demo
+                    </a>
                   )}
                 </div>
-
               </>
             )}
           </DialogContent>
@@ -277,15 +343,20 @@ export function ProjectsSection() {
         {/* Call to Action */}
         <div className="text-center mt-16">
           <p className="text-gray-400 mb-6">Want to see more of my work?</p>
-          <Link href={"http://github.com/sherazArif172/"} className="cursor-pointer"><Button
-            size="lg"
-            className="cursor-pointer bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 px-8 py-6 text-lg font-semibold rounded-full"
+          <Link
+            href={"http://github.com/sherazArif172/"}
+            className="cursor-pointer"
           >
-            <Github className="w-5 h-5 mr-2" />
-            View All on GitHub
-          </Button></Link>
+            <Button
+              size="lg"
+              className="cursor-pointer bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 px-8 py-6 text-lg font-semibold rounded-full"
+            >
+              <Github className="w-5 h-5 mr-2" />
+              View All on GitHub
+            </Button>
+          </Link>
         </div>
       </div>
     </section>
-  )
+  );
 }

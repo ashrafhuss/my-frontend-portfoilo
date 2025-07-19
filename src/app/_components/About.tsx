@@ -101,7 +101,7 @@ export function AboutSection() {
         <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_48%,rgba(255,255,255,0.02)_49%,rgba(255,255,255,0.02)_51%,transparent_52%)] bg-[length:20px_20px] animate-pulse"></div>
       </div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="max-w-7xl mx-auto relative z-10 w-full">
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-black mb-6">
@@ -113,10 +113,11 @@ export function AboutSection() {
           </h2>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
+        {/* Two-column layout for code editor and terminal */}
+        <div className="w-full flex flex-col lg:flex-row gap-6 items-stretch">
           {/* Code Editor */}
-          <div className="relative">
-            <div className="min-w-xl bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-gray-700/50 overflow-hidden shadow-2xl">
+          <div className="relative w-full lg:w-1/2 flex flex-col transition-all duration-500 overflow-hidden">
+            <div className="flex-1 w-full bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-gray-700/50 overflow-hidden shadow-2xl min-h-[340px] transition-all duration-500">
               {/* Editor Header */}
               <div className="flex items-center justify-between px-6 py-4 bg-gray-800/50 border-b border-gray-700/50">
                 <div className="flex items-center gap-3">
@@ -133,7 +134,7 @@ export function AboutSection() {
               </div>
 
               {/* Code Content */}
-              <div className="p-6 font-mono text-sm leading-relaxed min-h-[400px]">
+              <div className="p-6 font-mono text-sm leading-relaxed min-h-[300px] w-full overflow-x-auto">
                 <div className="flex">
                   <div className="text-gray-500 select-none mr-4 text-right">
                     {Array.from(
@@ -188,8 +189,8 @@ export function AboutSection() {
           </div>
 
           {/* Terminal */}
-          <div className="relative">
-            <div className="bg-black/90 backdrop-blur-xl rounded-2xl border border-green-500/30 overflow-hidden shadow-2xl">
+          <div className="relative w-full lg:w-1/2 flex flex-col transition-all duration-500 overflow-hidden">
+            <div className="flex-1 w-full bg-black/90 backdrop-blur-xl rounded-2xl border border-green-500/30 overflow-hidden shadow-2xl min-h-[340px] transition-all duration-500">
               {/* Terminal Header */}
               <div className="flex items-center justify-between px-6 py-4 bg-green-500/10 border-b border-green-500/30">
                 <div className="flex items-center gap-3">
@@ -204,7 +205,7 @@ export function AboutSection() {
               </div>
 
               {/* Terminal Content */}
-              <div className="p-6 font-mono text-sm min-h-[400px] space-y-4">
+              <div className="p-6 font-mono text-sm min-h-[300px] w-full overflow-x-auto space-y-4">
                 {showTerminal &&
                   terminalCommands.slice(0, terminalStep).map((cmd, index) => (
                     <div key={index} className="space-y-2">
@@ -223,7 +224,7 @@ export function AboutSection() {
                       // Ready to collaborate? Let's connect!
                     </div>
                     <div className="flex gap-4">
-                      <Link
+                      <Link 
                         className="cursor-pointer"
                         href={"https://github.com/SherazArif172"}
                       >
@@ -268,7 +269,7 @@ export function AboutSection() {
         </div>
 
         {/* Bottom Stats */}
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="mt-16 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
           {[
             {
               icon: Coffee,
@@ -278,7 +279,7 @@ export function AboutSection() {
             },
             {
               icon: Code,
-              value: "50+",
+              value: "4+",
               label: "Projects Built",
               color: "text-blue-400",
             },
@@ -295,8 +296,8 @@ export function AboutSection() {
               color: "text-purple-400",
             },
           ].map((stat, index) => (
-            <div key={index} className="text-center group cursor-pointer">
-              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group-hover:scale-105">
+            <div key={index} className="text-center group cursor-pointer w-full">
+              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-white/30 transition-all duration-300 group-hover:scale-105 w-full">
                 <stat.icon className={`w-8 h-8 ${stat.color} mx-auto mb-3`} />
                 <div className="text-2xl font-bold text-white font-mono">
                   {stat.value}
