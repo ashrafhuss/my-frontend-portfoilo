@@ -261,7 +261,7 @@ export function SkillsSection() {
               transition={{ type: "spring", stiffness: 120, damping: 16 }}
             >
               <Card
-                className="group relative bg-white/5 backdrop-blur-sm border border-white/10 overflow-hidden hover:border-white/30 transition-all duration-300 transform hover:scale-105"
+                className="group relative bg-white/5 backdrop-blur-sm border border-white/10 overflow-hidden hover:border-white/30 transition-all duration-300 transform hover:scale-100 sm:hover:scale-105"
                 onMouseEnter={() => {
                   setHoveredSkill(skill.name)
                   setShowCode(skill.code)
