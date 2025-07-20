@@ -26,7 +26,8 @@ import {
   DialogDescription,
   DialogClose,
 } from "@/components/ui/dialog";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
+import { useRef } from "react";
 
 const projects = [
   {
@@ -109,6 +110,8 @@ export function ProjectsSection() {
     (typeof projects)[0] | null
   >(null);
   const [dialogOpen, setDialogOpen] = React.useState(false);
+  const sectionRef = useRef<HTMLDivElement | null>(null);
+  const inView = useInView(sectionRef, { once: true, margin: "-20% 0px" });
 
   const filteredProjects =
     activeCategory === "all"
@@ -132,7 +135,14 @@ export function ProjectsSection() {
   };
 
   return (
-    <section id="projects" className="py-20 px-4 relative overflow-hidden">
+    <motion.section
+      id="projects"
+      ref={sectionRef}
+      className="py-20 px-4 relative overflow-hidden"
+      initial={{ opacity: 0, y: 32 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ type: "spring", stiffness: 80, damping: 16 }}
+    >
       {/* Modal Background Blur */}
       {dialogOpen && (
         <div className="fixed inset-0 z-40 pointer-events-none">
@@ -149,7 +159,20 @@ export function ProjectsSection() {
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-green-600/10 to-blue-600/10 rounded-full blur-3xl"></div>
       </div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <motion.div
+        className="max-w-7xl mx-auto relative z-10"
+        initial="hidden"
+        animate={inView ? "visible" : "hidden"}
+        variants={{
+          hidden: {},
+          visible: {
+            transition: {
+              staggerChildren: 0.12,
+              delayChildren: 0.15,
+            },
+          },
+        }}
+      >
         {/* Header */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 bg-blue-500/20 text-blue-400 px-4 py-2 rounded-full text-sm font-mono mb-6">
@@ -195,106 +218,126 @@ export function ProjectsSection() {
         </div>
 
         {/* Only show the small cards grid for all projects */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.14,
+                delayChildren: 0.3,
+              },
+            },
+          }}
+        >
           {filteredProjects.map((project) => (
-            <Card
+            <motion.div
               key={project.id}
-              className="group relative bg-white/5 backdrop-blur-sm border border-white/10 overflow-hidden transition-all duration-300 transform hover:scale-105 hover:rotate-1 hover:border-emerald-400 hover:shadow-[0_0_16px_2px_rgba(16,185,129,0.4)] cursor-pointer"
-              onMouseEnter={() => setHoveredProject(project.id)}
-              onMouseLeave={() => setHoveredProject(null)}
-              onMouseMove={(e) => handleMouseMove(e, project.id)}
-              onClick={() => handleCardClick(project)}
+              className="w-full"
+              variants={{ hidden: { opacity: 0, y: 32 }, visible: { opacity: 1, y: 0 } }}
+              transition={{ type: "spring", stiffness: 120, damping: 18 }}
             >
-              <CardContent className="p-0">
-                {/* Project Image */}
-                <div className="relative overflow-hidden">
-                  <img
-                    src={project.image || "/placeholder.svg"}
-                    alt={project.title}
-                    className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
-                  />
-                  {/* Status Badge */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <Card
+                key={project.id}
+                className="group relative bg-white/5 backdrop-blur-sm border border-white/10 overflow-hidden transition-all duration-300 transform hover:scale-105 hover:rotate-1 hover:border-emerald-400 hover:shadow-[0_0_16px_2px_rgba(16,185,129,0.4)] cursor-pointer"
+                onMouseEnter={() => setHoveredProject(project.id)}
+                onMouseLeave={() => setHoveredProject(null)}
+                onMouseMove={(e) => handleMouseMove(e, project.id)}
+                onClick={() => handleCardClick(project)}
+              >
+                <CardContent className="p-0">
+                  {/* Project Image */}
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={project.image || "/placeholder.svg"}
+                      alt={project.title}
+                      className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+                    />
+                    {/* Status Badge */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
 
-                  {/* Glowing Beam Effect */}
-                  {hoveredProject === project.id &&
-                    mousePosition[project.id] && (
-                      <div
-                        className="pointer-events-none absolute z-20"
-                        style={{
-                          left: mousePosition[project.id].x - 40,
-                          top: mousePosition[project.id].y - 4,
-                          width: 80,
-                          height: 8,
-                          borderRadius: 8,
-                          background:
-                            "linear-gradient(90deg,rgba(16,185,129,0) 0%,rgba(16,185,129,0.7) 50%,rgba(16,185,129,0) 100%)",
-                          boxShadow: "0 0 16px 4px rgba(16,185,129,0.5)",
-                          transition: "left 0.1s linear, top 0.1s linear",
+                    {/* Glowing Beam Effect */}
+                    {hoveredProject === project.id &&
+                      mousePosition[project.id] && (
+                        <div
+                          className="pointer-events-none absolute z-20"
+                          style={{
+                            left: mousePosition[project.id].x - 40,
+                            top: mousePosition[project.id].y - 4,
+                            width: 80,
+                            height: 8,
+                            borderRadius: 8,
+                            background:
+                              "linear-gradient(90deg,rgba(16,185,129,0) 0%,rgba(16,185,129,0.7) 50%,rgba(16,185,129,0) 100%)",
+                            boxShadow: "0 0 16px 4px rgba(16,185,129,0.5)",
+                            transition: "left 0.1s linear, top 0.1s linear",
+                          }}
+                        />
+                      )}
+
+                    {/* Quick Actions */}
+                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Button
+                        size="sm"
+                        className="bg-white/20 backdrop-blur-sm text-white border-0 w-8 h-8 p-0"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.open(project.live, "_blank");
                         }}
-                      />
-                    )}
-
-                  {/* Quick Actions */}
-                  <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button
-                      size="sm"
-                      className="bg-white/20 backdrop-blur-sm text-white border-0 w-8 h-8 p-0"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        window.open(project.live, "_blank");
-                      }}
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Project Info */}
-                <div className="p-6">
-                  <h4 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
-                    {project.title}
-                  </h4>
-                  <p className="text-gray-400 text-sm mb-4 line-clamp-2">
-                    {project.description}
-                  </p>
-
-                  {/* Tech Stack */}
-                  <div className="flex flex-wrap gap-1 mb-4">
-                    {project.tech.slice(0, 3).map((tech, index) => (
-                      <span
-                        key={index}
-                        className="px-2 py-1 bg-white/10 text-gray-300 rounded text-xs"
                       >
-                        {tech}
-                      </span>
-                    ))}
-                    {project.tech.length > 3 && (
-                      <span className="px-2 py-1 bg-white/10 text-gray-400 rounded text-xs">
-                        +{project.tech.length - 3}
-                      </span>
-                    )}
+                        <ExternalLink className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
 
-                  {/* Status Badge (moved under tech stack) */}
-                  <div className="mb-2">
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-semibold
+                  {/* Project Info */}
+                  <div className="p-6">
+                    <h4 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
+                      {project.title}
+                    </h4>
+                    <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+                      {project.description}
+                    </p>
+
+                    {/* Tech Stack */}
+                    <div className="flex flex-wrap gap-1 mb-4">
+                      {project.tech.slice(0, 3).map((tech, index) => (
+                        <span
+                          key={index}
+                          className="px-2 py-1 bg-white/10 text-gray-300 rounded text-xs"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                      {project.tech.length > 3 && (
+                        <span className="px-2 py-1 bg-white/10 text-gray-400 rounded text-xs">
+                          +{project.tech.length - 3}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Status Badge (moved under tech stack) */}
+                    <div className="mb-2">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-semibold
                         ${project.status === "completed" || project.status === "complete"
                           ? "bg-green-500/20 text-green-400 border border-green-500/30"
                           : "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30"}
                       `}
-                    >
-                      {project.status === "completed" || project.status === "complete" ? "✓ Completed" : "🚧 In Progress"}
-                    </span>
-                  </div>
+                      >
+                        {project.status === "completed" || project.status === "complete" ? "✓ Completed" : "🚧 In Progress"}
+                      </span>
+                    </div>
 
-                  {/* Stats */}
-                </div>
-              </CardContent>
-            </Card>
+                    {/* Stats */}
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Project Details Dialog */}
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -370,7 +413,7 @@ export function ProjectsSection() {
             </Button>
           </Link>
         </div>
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 }
