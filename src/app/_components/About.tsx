@@ -275,7 +275,7 @@ export function AboutSection() {
                     <div className="text-green-400">
                       // Ready to collaborate? Let's connect!
                     </div>
-                    <div className="flex gap-4">
+                    <div className="flex flex-row flex-wrap justify-center gap-4 mb-4">
                       <Link
                         className="cursor-pointer"
                         href={"https://github.com/SherazArif172"}
