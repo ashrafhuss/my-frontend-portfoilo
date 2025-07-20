@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Menu, Github, Linkedin, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { motion } from "framer-motion";
 
 const navItems = [
   { name: "Home", href: "/" },
@@ -33,7 +34,10 @@ export function PortfolioNavbar() {
   }, [])
 
   return (
-    <nav
+    <motion.nav
+      initial={{ opacity: 0, y: 0, scale: 0.98, filter: 'blur(8px)' }}
+      animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+      transition={{ type: "spring", stiffness: 80, damping: 14, mass: 0.7 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled ? "bg-black/90 backdrop-blur-md border-b border-white/10" : "bg-transparent"
       }`}
@@ -49,20 +53,41 @@ export function PortfolioNavbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <motion.div
+            className="hidden md:flex items-center space-x-8"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: {},
+              visible: {
+                transition: {
+                  staggerChildren: 0.06,
+                  delayChildren: 0.08,
+                },
+              },
+            }}
+          >
             {navItems.map((item) => (
-              <Link
+              <motion.div
                 key={item.name}
-                href={item.href}
-                className={`text-white/80 hover:text-white transition-all duration-200 relative group ${
-                  activeSection === item.name.toLowerCase() ? "text-white" : ""
-                }`}
+                variants={{
+                  hidden: { opacity: 0, y: -16, scale: 0.96 },
+                  visible: { opacity: 1, y: 0, scale: 1 },
+                }}
+                transition={{ type: "spring", stiffness: 120, damping: 16, mass: 0.7 }}
               >
-                {item.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 transition-all duration-300 group-hover:w-full"></span>
-              </Link>
+                <Link
+                  href={item.href}
+                  className={`text-white/80 hover:text-white transition-all duration-200 relative group ${
+                    activeSection === item.name.toLowerCase() ? "text-white" : ""
+                  }`}
+                >
+                  {item.name}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 transition-all duration-300 group-hover:w-full"></span>
+                </Link>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
 
           {/* Social Links & CTA */}
           <div className="hidden md:flex items-center space-x-4">
@@ -129,6 +154,6 @@ export function PortfolioNavbar() {
           </Sheet>
         </div>
       </div>
-    </nav>
+    </motion.nav>
   )
 }

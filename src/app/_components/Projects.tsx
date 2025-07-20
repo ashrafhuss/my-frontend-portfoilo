@@ -38,14 +38,14 @@ const projects = [
       "Noshly is a chef-centric platform designed for creating and managing culinary events. Chefs can host cooking classes, tasting sessions, and pop-up dinners, while users can browse and book events in real time. The platform includes secure payment integration, event management tools, and an admin dashboard for monitoring activities. Built with React, Node.js, and AWS for performance and scalability.",
     image: "/images/img3.png",
     category: "fullstack",
-    tech: ["React", "Node.js", "PostgreSQL", "Stripe", "AWS"],
+    tech: ["Next.js", "Node.js", "Mongodb", "Stripe", "AWS"],
     live: "https://noshly.io/",
     featured: true,
     status: "completed",
   },
 
   {
-    id: 3,
+    id: 2,
     title: "Pack & Track Courier Portal",
     description:
       "A full-featured courier and logistics management system that enables users to book shipments, track deliveries in real-time, and manage orders efficiently.",
@@ -66,7 +66,7 @@ const projects = [
     status: "complete",
   },
   {
-    id: 5,
+    id: 3,
     title: "Car Rental",
     description:
       "A modern car rental platform that allows users to browse, book, and manage rental vehicles seamlessly in real-time.",
@@ -213,6 +213,7 @@ export function ProjectsSection() {
                     alt={project.title}
                     className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
                   />
+                  {/* Status Badge */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
 
                   {/* Glowing Beam Effect */}
@@ -273,6 +274,19 @@ export function ProjectsSection() {
                         +{project.tech.length - 3}
                       </span>
                     )}
+                  </div>
+
+                  {/* Status Badge (moved under tech stack) */}
+                  <div className="mb-2">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-semibold
+                        ${project.status === "completed" || project.status === "complete"
+                          ? "bg-green-500/20 text-green-400 border border-green-500/30"
+                          : "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30"}
+                      `}
+                    >
+                      {project.status === "completed" || project.status === "complete" ? "✓ Completed" : "🚧 In Progress"}
+                    </span>
                   </div>
 
                   {/* Stats */}
