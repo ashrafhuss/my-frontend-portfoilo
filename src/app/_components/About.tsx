@@ -104,9 +104,17 @@ export function AboutSection() {
     <motion.section
       ref={aboutRef}
       className="min-h-screen flex items-center justify-center py-20 px-4 relative overflow-hidden"
-      initial={{ opacity: 0, y: 32 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ type: "spring", stiffness: 80, damping: 16 }}
+      initial="hidden"
+      animate={inView ? "visible" : "hidden"}
+      variants={{
+        hidden: {},
+        visible: {
+          transition: {
+            staggerChildren: 0.18,
+            delayChildren: 0.1,
+          },
+        },
+      }}
     >
       {/* Animated Background */}
       <div className="absolute inset-0">
@@ -116,14 +124,12 @@ export function AboutSection() {
 
       <motion.div
         className="max-w-7xl mx-auto relative z-10 w-full"
-        initial="hidden"
-        animate="visible"
         variants={{
           hidden: {},
           visible: {
             transition: {
-              staggerChildren: 0.12,
-              delayChildren: 0.15,
+              staggerChildren: 0.18,
+              delayChildren: 0.1,
             },
           },
         }}
@@ -131,13 +137,12 @@ export function AboutSection() {
         {/* Header */}
         <motion.div
           className="text-center mb-16"
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 100, damping: 18, delay: 0.1 }}
+          variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }}
+          transition={{ type: "spring", stiffness: 100, damping: 18 }}
         >
           <h2 className="text-4xl lg:text-5xl font-black mb-6">
             <span className="text-white font-mono">{"<"}</span>
-            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent animate-gradient delay-300">
+            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent animate-gradient ">
               About
             </span>
             <span className="text-white font-mono">{"/>"}</span>
@@ -147,17 +152,17 @@ export function AboutSection() {
         {/* Two-column layout for code editor and terminal */}
         <motion.div
           className="w-full flex flex-col lg:flex-row gap-6 items-stretch"
-          initial="hidden"
-          animate="visible"
           variants={{
-            hidden: {},
+            hidden: { opacity: 0, y: 32 },
             visible: {
+              opacity: 1, y: 0,
               transition: {
                 staggerChildren: 0.18,
                 delayChildren: 0.25,
               },
             },
           }}
+          transition={{ type: "spring", stiffness: 120, damping: 18 }}
         >
           {/* Code Editor */}
           <motion.div
@@ -318,17 +323,17 @@ export function AboutSection() {
         {/* Bottom Stats */}
         <motion.div
           className="mt-16 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full"
-          initial="hidden"
-          animate="visible"
           variants={{
-            hidden: {},
+            hidden: { opacity: 0, y: 32 },
             visible: {
+              opacity: 1, y: 0,
               transition: {
                 staggerChildren: 0.14,
                 delayChildren: 0.7,
               },
             },
           }}
+          transition={{ type: "spring", stiffness: 120, damping: 18 }}
           onAnimationComplete={() => setStatsVisible(true)}
         >
           {[

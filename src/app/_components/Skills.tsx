@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Code2, Database, Cloud, Zap, Globe, Settings, Brain, Rocket, Star } from "lucide-react"
 import CountUp from "./CountUp";
+import { motion, useInView } from "framer-motion";
+import { useRef, useState } from "react";
 
 const skillCategories = [
   {
@@ -69,6 +71,9 @@ export function SkillsSection() {
   const [hoveredSkill, setHoveredSkill] = React.useState<string | null>(null)
   const [showCode, setShowCode] = React.useState<string | null>(null)
   const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 })
+  const sectionRef = useRef<HTMLDivElement | null>(null);
+  const inView = useInView(sectionRef, { once: true, margin: "-20% 0px" });
+  const [statsVisible, setStatsVisible] = useState(false);
 
   const activeSkills = skillCategories.find((cat) => cat.id === activeCategory)?.skills || []
 
@@ -88,7 +93,14 @@ export function SkillsSection() {
   }
 
   return (
-    <section id="skills" className="py-20 px-4 relative overflow-hidden">
+    <motion.section
+      id="skills"
+      ref={sectionRef}
+      className="py-20 px-4 relative overflow-hidden"
+      initial={{ opacity: 0, y: 32 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ type: "spring", stiffness: 80, damping: 16 }}
+    >
       {/* Animated Background */}
       <div className="absolute inset-0">
         <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-gradient-to-r from-purple-600/10 to-blue-600/10 rounded-full blur-3xl animate-pulse"></div>
@@ -106,9 +118,26 @@ export function SkillsSection() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <motion.div
+        className="max-w-7xl mx-auto relative z-10"
+        initial="hidden"
+        animate={inView ? "visible" : "hidden"}
+        variants={{
+          hidden: {},
+          visible: {
+            transition: {
+              staggerChildren: 0.12,
+              delayChildren: 0.15,
+            },
+          },
+        }}
+      >
         {/* Header */}
-        <div className="text-center mb-16">
+        <motion.div
+          className="text-center mb-16"
+          variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }}
+          transition={{ type: "spring", stiffness: 100, damping: 18 }}
+        >
           <div className="inline-flex items-center gap-2 bg-purple-500/20 text-purple-400 px-4 py-2 rounded-full text-sm font-mono mb-6">
             <Zap className="w-4 h-4" />
             Technical Expertise
@@ -124,97 +153,152 @@ export function SkillsSection() {
             A comprehensive overview of my technical skills, tools, and technologies I use to build exceptional digital
             experiences.
           </p>
-        </div>
+        </motion.div>
 
         {/* Overall Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+        <motion.div
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16"
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.14,
+                delayChildren: 0.3,
+              },
+            },
+          }}
+          onAnimationComplete={() => setStatsVisible(true)}
+        >
           {overallStats.map((stat, index) => {
-            const Icon = stat.icon
+            const Icon = stat.icon;
             return (
-              <Card
+              <motion.div
                 key={index}
-                className="bg-white/5 backdrop-blur-sm border border-white/10 hover:border-white/30 transition-all duration-300 group"
+                className="w-full"
+                variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }}
+                transition={{ type: "spring", stiffness: 120, damping: 16 }}
               >
-                <CardContent className="p-6 text-center">
-                  <Icon className="w-8 h-8 text-purple-400 mx-auto mb-3 group-hover:scale-110 transition-transform" />
-                  <div className="text-3xl font-bold text-white mb-1 flex items-center justify-center">
-                    <CountUp to={parseInt(stat.value)} duration={1.2} />
-                    {stat.value.match(/\+|%/) && <span className="ml-1">{stat.value.replace(/\d+/g, "")}</span>}
-                  </div>
-                  <div className="text-sm text-gray-400">{stat.label}</div>
-                </CardContent>
-              </Card>
-            )
+                <Card className="bg-white/5 backdrop-blur-sm border border-white/10 hover:border-white/30 transition-all duration-300 group">
+                  <CardContent className="p-6 text-center">
+                    <Icon className="w-8 h-8 text-purple-400 mx-auto mb-3 group-hover:scale-110 transition-transform" />
+                    <div className="text-3xl font-bold text-white mb-1 flex items-center justify-center">
+                      <CountUp to={parseInt(stat.value)} duration={1.2} startWhen={statsVisible} />
+                      {stat.value.match(/\+|%/) && <span className="ml-1">{stat.value.replace(/\d+/g, "")}</span>}
+                    </div>
+                    <div className="text-sm text-gray-400">{stat.label}</div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
           })}
-        </div>
+        </motion.div>
 
         {/* Category Navigation */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
+        <motion.div
+          className="flex flex-wrap justify-center gap-4 mb-12"
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.08,
+                delayChildren: 0.5,
+              },
+            },
+          }}
+        >
           {skillCategories.map((category) => {
-            const Icon = category.icon
+            const Icon = category.icon;
             return (
-              <Button
+              <motion.div
                 key={category.id}
-                variant={activeCategory === category.id ? "default" : "outline"}
-                className={`group relative overflow-hidden transition-all duration-300 ${
-                  activeCategory === category.id
-                    ? `bg-gradient-to-r ${category.color} text-white border-0 shadow-lg`
-                    : "bg-white/5 border-white/20 text-gray-300 hover:bg-white/10 hover:text-white"
-                }`}
-                onClick={() => setActiveCategory(category.id)}
+                variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0 } }}
+                transition={{ type: "spring", stiffness: 120, damping: 16 }}
               >
-                <Icon className="w-4 h-4 mr-2" />
-                {category.name}
-                <span className="ml-2 text-xs bg-white/20 px-2 py-1 rounded-full">
-                  {skillCategories.find((cat) => cat.id === category.id)?.skills.length}
-                </span>
-              </Button>
-            )
+                <Button
+                  variant={activeCategory === category.id ? "default" : "outline"}
+                  className={`group relative overflow-hidden transition-all duration-300 ${
+                    activeCategory === category.id
+                      ? `bg-gradient-to-r ${category.color} text-white border-0 shadow-lg`
+                      : "bg-white/5 border-white/20 text-gray-300 hover:bg-white/10 hover:text-white"
+                  }`}
+                  onClick={() => setActiveCategory(category.id)}
+                >
+                  <Icon className="w-4 h-4 mr-2" />
+                  {category.name}
+                  <span className="ml-2 text-xs bg-white/20 px-2 py-1 rounded-full">
+                    {skillCategories.find((cat) => cat.id === category.id)?.skills.length}
+                  </span>
+                </Button>
+              </motion.div>
+            );
           })}
-        </div>
+        </motion.div>
 
         {/* Skills Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+        <motion.div
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16"
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.10,
+                delayChildren: 0.7,
+              },
+            },
+          }}
+        >
           {activeSkills.map((skill, index) => (
-            <Card
+            <motion.div
               key={skill.name}
-              className="group relative bg-white/5 backdrop-blur-sm border border-white/10 overflow-hidden hover:border-white/30 transition-all duration-300 transform hover:scale-105"
-              onMouseEnter={() => {
-                setHoveredSkill(skill.name)
-                setShowCode(skill.code)
-              }}
-              onMouseLeave={() => {
-                setHoveredSkill(null)
-                setShowCode(null)
-              }}
+              className="w-full"
+              variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }}
+              transition={{ type: "spring", stiffness: 120, damping: 16 }}
             >
-              <CardContent className="p-6">
-                {/* Skill Header */}
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">
-                    {skill.name}
-                  </h4>
-                  <span className="text-sm text-gray-400 bg-white/10 px-2 py-1 rounded-full">{skill.experience}</span>
-                </div>
+              <Card
+                className="group relative bg-white/5 backdrop-blur-sm border border-white/10 overflow-hidden hover:border-white/30 transition-all duration-300 transform hover:scale-105"
+                onMouseEnter={() => {
+                  setHoveredSkill(skill.name)
+                  setShowCode(skill.code)
+                }}
+                onMouseLeave={() => {
+                  setHoveredSkill(null)
+                  setShowCode(null)
+                }}
+              >
+                <CardContent className="p-6">
+                  {/* Skill Header */}
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">
+                      {skill.name}
+                    </h4>
+                    <span className="text-sm text-gray-400 bg-white/10 px-2 py-1 rounded-full">{skill.experience}</span>
+                  </div>
 
-                {/* Skill Level */}
+                  {/* Skill Level */}
 
-                {/* Code Preview */}
-                <div className="bg-black/30 rounded-lg p-3 font-mono text-xs">
-                  <div className="text-gray-500 mb-1">// Example usage</div>
-                  <div className="text-green-400">{skill.code}</div>
-                </div>
+                  {/* Code Preview */}
+                  <div className="bg-black/30 rounded-lg p-3 font-mono text-xs">
+                    <div className="text-gray-500 mb-1">// Example usage</div>
+                    <div className="text-green-400">{skill.code}</div>
+                  </div>
 
-                {/* Skill Level Badge */}
+                  {/* Skill Level Badge */}
 
-                {/* Hover Effect */}
-                {hoveredSkill === skill.name && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 pointer-events-none" />
-                )}
-              </CardContent>
-            </Card>
+                  {/* Hover Effect */}
+                  {hoveredSkill === skill.name && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 pointer-events-none" />
+                  )}
+                </CardContent>
+              </Card>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Floating Code Tooltip */}
         {showCode && (
@@ -242,7 +326,7 @@ export function SkillsSection() {
             Let's Build Something Amazing
           </Button>
         </div>
-      </div>
+      </motion.div>
 
       <style jsx>{`
         @keyframes float {
@@ -253,6 +337,6 @@ export function SkillsSection() {
           animation: float 3s ease-in-out infinite;
         }
       `}</style>
-    </section>
+    </motion.section>
   )
 }

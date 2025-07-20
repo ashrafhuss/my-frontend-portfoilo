@@ -193,29 +193,45 @@ export function ProjectsSection() {
         </div>
 
         {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-4 mb-16">
+        <motion.div
+          className="flex flex-wrap justify-center gap-4 mb-16"
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.08,
+                delayChildren: 0.5,
+              },
+            },
+          }}
+        >
           {categories.map((category) => {
             const Icon = category.icon;
             return (
-              <Button
+              <motion.div
                 key={category.id}
-                variant={activeCategory === category.id ? "default" : "outline"}
-                className={`group relative overflow-hidden ${
-                  activeCategory === category.id
-                    ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0"
-                    : "bg-white/5 border-white/20 text-gray-300 hover:bg-white/10 hover:text-white"
-                }`}
-                onClick={() => setActiveCategory(category.id)}
+                variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0 } }}
+                transition={{ type: "spring", stiffness: 120, damping: 16 }}
               >
-                <Icon className="w-4 h-4 mr-2" />
-                {category.name}
-                <span className="ml-2 text-xs bg-white/20 px-2 py-1 rounded-full">
-                  {category.count}
-                </span>
-              </Button>
+                <Button
+                  variant={activeCategory === category.id ? "default" : "outline"}
+                  className={`group relative overflow-hidden ${
+                    activeCategory === category.id
+                      ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0"
+                      : "bg-white/5 border-white/20 text-gray-300 hover:bg-white/10 hover:text-white"
+                  }`}
+                  onClick={() => setActiveCategory(category.id)}
+                >
+                  <Icon className="w-4 h-4 mr-2" />
+                  {category.name}
+                  <span className="ml-2 text-xs bg-white/20 px-2 py-1 rounded-full">{category.count}</span>
+                </Button>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
 
         {/* Only show the small cards grid for all projects */}
         <motion.div
