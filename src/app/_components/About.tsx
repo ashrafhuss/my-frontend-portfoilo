@@ -153,31 +153,26 @@ export function AboutSection() {
                   </div>
                   <div className="flex-1">
                     <pre className="text-gray-300 whitespace-pre-wrap">
-                      <span
-                        dangerouslySetInnerHTML={{
-                          __html: typedCode
-                            .replace(
-                              /const|let|var/g,
-                              '<span class="text-purple-400">$&</span>'
-                            )
-                            .replace(
-                              /'/g,
-                              '<span class="text-green-400">\'</span>'
-                            )
-                            .replace(
-                              /:/g,
-                              '<span class="text-blue-400">:</span>'
-                            )
-                            .replace(
-                              /\[|\]/g,
-                              '<span class="text-yellow-400">$&</span>'
-                            )
-                            .replace(
-                              /{|}/g,
-                              '<span class="text-red-400">$&</span>'
-                            ),
-                        }}
-                      />
+                      {(() => {
+                        // Syntax highlight as before
+                        const highlighted = typedCode
+                          .replace(/const|let|var/g, '<span class="text-purple-400">$&</span>')
+                          .replace(/'/g, '<span class="text-green-400">\'</span>')
+                          .replace(/:/g, '<span class="text-blue-400">:</span>')
+                          .replace(/\[|\]/g, '<span class="text-yellow-400">$&</span>')
+                          .replace(/{|}/g, '<span class="text-red-400">$&</span>');
+                        // If last char is newline, put cursor at end of last line, not as a new line
+                        if (showCursor) {
+                          if (typedCode.endsWith("\n")) {
+                            // Remove last newline, add cursor, then newline
+                            return <span dangerouslySetInnerHTML={{ __html: highlighted.slice(0, -1) }} />;
+                          } else {
+                            return <span dangerouslySetInnerHTML={{ __html: highlighted }} />;
+                          }
+                        } else {
+                          return <span dangerouslySetInnerHTML={{ __html: highlighted }} />;
+                        }
+                      })()}
                       {showCursor && (
                         <span className="bg-white text-black">|</span>
                       )}
@@ -224,7 +219,7 @@ export function AboutSection() {
                       // Ready to collaborate? Let's connect!
                     </div>
                     <div className="flex gap-4">
-                      <Link 
+                      <Link
                         className="cursor-pointer"
                         href={"https://github.com/SherazArif172"}
                       >
@@ -296,7 +291,10 @@ export function AboutSection() {
               color: "text-purple-400",
             },
           ].map((stat, index) => (
-            <div key={index} className="text-center group cursor-pointer w-full">
+            <div
+              key={index}
+              className="text-center group cursor-pointer w-full"
+            >
               <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-white/30 transition-all duration-300 group-hover:scale-105 w-full">
                 <stat.icon className={`w-8 h-8 ${stat.color} mx-auto mb-3`} />
                 <div className="text-2xl font-bold text-white font-mono">
