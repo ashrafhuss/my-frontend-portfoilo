@@ -33,6 +33,25 @@ export function PortfolioNavbar() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+  // Smooth scroll handler for in-page links
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith('#')) {
+      e.preventDefault();
+      const el = document.querySelector(href);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else if (href === '/') {
+      e.preventDefault();
+      const el = document.getElementById('home');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+  };
+
   return (
     <motion.nav
       initial={{ opacity: 0, y: 0, scale: 0.98, filter: 'blur(8px)' }}
@@ -81,6 +100,7 @@ export function PortfolioNavbar() {
                   className={`text-white/80 hover:text-white transition-all duration-200 relative group ${
                     activeSection === item.name.toLowerCase() ? "text-white" : ""
                   }`}
+                  onClick={(e) => handleNavClick(e, item.href)}
                 >
                   {item.name}
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 transition-all duration-300 group-hover:w-full"></span>
@@ -89,7 +109,7 @@ export function PortfolioNavbar() {
             ))}
           </motion.div>
 
-          {/* Social Links & CTA */}
+          {/* Social Links - Desktop */}
           <div className="hidden md:flex items-center space-x-4">
             {socialLinks.map((social) => {
               const Icon = social.icon
@@ -103,55 +123,23 @@ export function PortfolioNavbar() {
                 </Link>
               )
             })}
-            {/* <Button
-              variant="outline"
-              className="ml-4 bg-transparent border-white/20 text-white hover:bg-white hover:text-black transition-all duration-300"
-            >
-              Hire Me
-            </Button> */}
           </div>
 
-          {/* Mobile Menu */}
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden text-white hover:bg-white/10">
-                <Menu className="h-6 w-6" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="bg-black border-white/10 text-white w-80">
-              <div className="flex flex-col space-y-6 mt-8">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className="text-lg font-medium text-white/80 hover:text-white transition-colors duration-200 py-2 border-b border-white/10 hover:border-white/30"
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-
-                <div className="pt-6">
-                  <div className="flex space-x-4 mb-6">
-                    {socialLinks.map((social) => {
-                      const Icon = social.icon
-                      return (
-                        <Link
-                          key={social.name}
-                          href={social.href}
-                          className="text-white/60 hover:text-white transition-colors duration-200 p-3 hover:bg-white/10 rounded-full"
-                        >
-                          <Icon className="w-5 h-5" />
-                        </Link>
-                      )
-                    })}
-                  </div>
-                  <Button className="w-full bg-white text-black hover:bg-gray-200 transition-colors duration-300">
-                    Hire Me
-                  </Button>
-                </div>
-              </div>
-            </SheetContent>
-          </Sheet>
+          {/* Social Links - Mobile Only */}
+          <div className="flex md:hidden items-center space-x-4 ml-auto">
+            {socialLinks.map((social) => {
+              const Icon = social.icon
+              return (
+                <Link
+                  key={social.name}
+                  href={social.href}
+                  className="text-white/60 hover:text-white transition-colors duration-200 p-2 hover:bg-white/10 rounded-full"
+                >
+                  <Icon className="w-5 h-5" />
+                </Link>
+              )
+            })}
+          </div>
         </div>
       </div>
     </motion.nav>
