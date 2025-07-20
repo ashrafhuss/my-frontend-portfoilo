@@ -12,6 +12,9 @@ import {
   Mail,
 } from "lucide-react";
 import Link from "next/link";
+import CountUp from "./CountUp";
+import { motion } from "framer-motion";
+import { useInView } from "framer-motion";
 
 const codeLines = [
   "const developer = {",
@@ -51,6 +54,10 @@ export function AboutSection() {
   const [showCursor, setShowCursor] = React.useState(true);
   const [terminalStep, setTerminalStep] = React.useState(0);
   const [showTerminal, setShowTerminal] = React.useState(false);
+  const [statsVisible, setStatsVisible] = React.useState(false);
+
+  const aboutRef = React.useRef<HTMLDivElement | null>(null);
+  const inView = useInView(aboutRef, { once: true, margin: "-20% 0px" });
 
   // Typing animation for code
   React.useEffect(() => {
@@ -94,16 +101,40 @@ export function AboutSection() {
   }, [showTerminal, terminalStep]);
 
   return (
-    <section className="min-h-screen flex items-center justify-center py-20 px-4 relative overflow-hidden">
+    <motion.section
+      ref={aboutRef}
+      className="min-h-screen flex items-center justify-center py-20 px-4 relative overflow-hidden"
+      initial={{ opacity: 0, y: 32 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ type: "spring", stiffness: 80, damping: 16 }}
+    >
       {/* Animated Background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.1),transparent_50%)]"></div>
         <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_48%,rgba(255,255,255,0.02)_49%,rgba(255,255,255,0.02)_51%,transparent_52%)] bg-[length:20px_20px] animate-pulse"></div>
       </div>
 
-      <div className="max-w-7xl mx-auto relative z-10 w-full">
+      <motion.div
+        className="max-w-7xl mx-auto relative z-10 w-full"
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: {},
+          visible: {
+            transition: {
+              staggerChildren: 0.12,
+              delayChildren: 0.15,
+            },
+          },
+        }}
+      >
         {/* Header */}
-        <div className="text-center mb-16">
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 100, damping: 18, delay: 0.1 }}
+        >
           <h2 className="text-4xl lg:text-5xl font-black mb-6">
             <span className="text-white font-mono">{"<"}</span>
             <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent animate-gradient delay-300">
@@ -111,12 +142,29 @@ export function AboutSection() {
             </span>
             <span className="text-white font-mono">{"/>"}</span>
           </h2>
-        </div>
+        </motion.div>
 
         {/* Two-column layout for code editor and terminal */}
-        <div className="w-full flex flex-col lg:flex-row gap-6 items-stretch">
+        <motion.div
+          className="w-full flex flex-col lg:flex-row gap-6 items-stretch"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.18,
+                delayChildren: 0.25,
+              },
+            },
+          }}
+        >
           {/* Code Editor */}
-          <div className="relative w-full lg:w-1/2 flex flex-col transition-all duration-500 overflow-hidden">
+          <motion.div
+            className="relative w-full lg:w-1/2 flex flex-col transition-all duration-500 overflow-hidden"
+            variants={{ hidden: { opacity: 0, y: 32 }, visible: { opacity: 1, y: 0 } }}
+            transition={{ type: "spring", stiffness: 120, damping: 18 }}
+          >
             <div className="flex-1 w-full bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-gray-700/50 overflow-hidden shadow-2xl min-h-[340px] transition-all duration-500">
               {/* Editor Header */}
               <div className="flex items-center justify-between px-6 py-4 bg-gray-800/50 border-b border-gray-700/50">
@@ -181,10 +229,14 @@ export function AboutSection() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Terminal */}
-          <div className="relative w-full lg:w-1/2 flex flex-col transition-all duration-500 overflow-hidden">
+          <motion.div
+            className="relative w-full lg:w-1/2 flex flex-col transition-all duration-500 overflow-hidden"
+            variants={{ hidden: { opacity: 0, y: 32 }, visible: { opacity: 1, y: 0 } }}
+            transition={{ type: "spring", stiffness: 120, damping: 18, delay: 0.1 }}
+          >
             <div className="flex-1 w-full bg-black/90 backdrop-blur-xl rounded-2xl border border-green-500/30 overflow-hidden shadow-2xl min-h-[340px] transition-all duration-500">
               {/* Terminal Header */}
               <div className="flex items-center justify-between px-6 py-4 bg-green-500/10 border-b border-green-500/30">
@@ -260,11 +312,25 @@ export function AboutSection() {
                 )}
               </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Bottom Stats */}
-        <div className="mt-16 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
+        <motion.div
+          className="mt-16 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.14,
+                delayChildren: 0.7,
+              },
+            },
+          }}
+          onAnimationComplete={() => setStatsVisible(true)}
+        >
           {[
             {
               icon: Coffee,
@@ -291,21 +357,25 @@ export function AboutSection() {
               color: "text-purple-400",
             },
           ].map((stat, index) => (
-            <div
+            <motion.div
               key={index}
               className="text-center group cursor-pointer w-full"
+              variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }}
+              transition={{ type: "spring", stiffness: 120, damping: 16 }}
             >
               <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-white/30 transition-all duration-300 group-hover:scale-105 w-full">
                 <stat.icon className={`w-8 h-8 ${stat.color} mx-auto mb-3`} />
-                <div className="text-2xl font-bold text-white font-mono">
-                  {stat.value}
+                <div className="text-2xl font-bold text-white font-mono flex items-center justify-center">
+                  <CountUp to={parseInt(stat.value.replace(/\D/g, ""))} duration={1.2} startWhen={statsVisible} />
+                  {stat.value.includes("+") && <span className="ml-1">+</span>}
+                  {stat.value.includes("%") && <span className="ml-1">%</span>}
                 </div>
                 <div className="text-sm text-gray-400">{stat.label}</div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
-      </div>
-    </section>
+        </motion.div>
+      </motion.div>
+    </motion.section>
   );
 }

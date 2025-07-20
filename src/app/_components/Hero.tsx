@@ -5,9 +5,11 @@ import { Button } from "@/components/ui/button";
 import { ArrowDown, Download, Eye, Sparkles } from "lucide-react";
 import Link from "next/link";
 import CountUp from "./CountUp";
+import { motion } from "framer-motion";
 
 export function HeroSection() {
   const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 });
+  const [statsVisible, setStatsVisible] = React.useState(false);
 
   React.useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -42,80 +44,158 @@ export function HeroSection() {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 text-center px-4 max-w-6xl mx-auto">
+      <motion.div
+        className="relative z-10 text-center px-4 max-w-6xl mx-auto"
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: {},
+          visible: {
+            transition: {
+              staggerChildren: 0.08,
+              delayChildren: 0.1,
+            },
+          },
+        }}
+      >
         {/* Floating Badge */}
-        <div className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full px-4 py-2 mb-8 animate-fade-in">
+        <motion.div
+          className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full px-4 py-2 mb-8"
+          initial={{ opacity: 0, y: -20, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ type: "spring", stiffness: 120, damping: 16 }}
+        >
           <Sparkles className="w-4 h-4 text-yellow-400" />
           <span className="text-sm text-gray-300">
             Available for new projects
           </span>
-        </div>
+        </motion.div>
 
         {/* Main Heading */}
-        <h1 className="text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-none">
-          <span className="block bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent animate-gradient">
+        <motion.h1
+          className="text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-none"
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 80, damping: 14 }}
+        >
+          <motion.span
+            className="block bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent animate-gradient"
+            initial={{ opacity: 0, x: -40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ type: "spring", stiffness: 100, damping: 18, delay: 0.2 }}
+          >
             INNOVATIVE
-          </span>
-          <span className="block bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent animate-gradient delay-300">
+          </motion.span>
+          <motion.span
+            className="block bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent animate-gradient "
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 100, damping: 18, delay: 0.35 }}
+          >
             ENGINEER
-          </span>
-        </h1>
+          </motion.span>
+        </motion.h1>
 
         {/* Subtitle */}
-        <p className="text-xl md:text-2xl text-gray-300 mb-4 max-w-3xl mx-auto leading-relaxed">
-          I build immersive web experiences with a focus on clean design and
-          robust performance
-        </p>
+        <motion.p
+          className="text-xl md:text-2xl text-gray-300 mb-4 max-w-3xl mx-auto leading-relaxed"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 100, damping: 18, delay: 0.5 }}
+        >
+          I build immersive web experiences with a focus on clean design and robust performance
+        </motion.p>
 
         {/* Description */}
-        <p className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto">
-          Expert in <span className="font-bold">React</span>,{" "}
-          <span className="font-bold">Next.js</span>, and modern frameworks to
-          transform your vision into fast, fluid, and responsive digital
-          products.
-        </p>
+        <motion.p
+          className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 100, damping: 18, delay: 0.6 }}
+        >
+          Expert in <span className="font-bold">React</span>, <span className="font-bold">Next.js</span>, and modern frameworks to transform your vision into fast, fluid, and responsive digital products.
+        </motion.p>
 
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
-          <Button
-            size="lg"
-            className="cursor-pointer bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0 px-8 py-6 text-lg font-semibold rounded-full shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105"
-            onClick={() =>
-              window.open("https://github.com/SherazArif172/", "_blank")
-            }
+        <motion.div
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.12,
+                delayChildren: 0.7,
+              },
+            },
+          }}
+        >
+          <motion.div
+            variants={{ hidden: { opacity: 0, y: 20, scale: 0.96 }, visible: { opacity: 1, y: 0, scale: 1 } }}
+            transition={{ type: "spring", stiffness: 120, damping: 16 }}
           >
-            <Eye className="w-5 h-5 mr-2" />
-            View My Work
-          </Button>
-          <Button
-            variant="outline"
-            size="lg"
-            className="cursor-pointer border-white/20 text-white hover:bg-white hover:text-black px-8 py-6 text-lg font-semibold rounded-full backdrop-blur-sm transition-all duration-300 transform hover:scale-105 bg-transparent"
+            <Button
+              size="lg"
+              className="cursor-pointer bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0 px-8 py-6 text-lg font-semibold rounded-full shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105"
+              onClick={() => window.open("https://github.com/SherazArif172/", "_blank")}
+            >
+              <Eye className="w-5 h-5 mr-2" />
+              View My Work
+            </Button>
+          </motion.div>
+          <motion.div
+            variants={{ hidden: { opacity: 0, y: 20, scale: 0.96 }, visible: { opacity: 1, y: 0, scale: 1 } }}
+            transition={{ type: "spring", stiffness: 120, damping: 16 }}
           >
-            <Download className="w-5 h-5 mr-2" />
-            <Link href="/Sheraz Arif.pdf" download>
-              Download CV
-            </Link>
-          </Button>
-        </div>
+            <Button
+              variant="outline"
+              size="lg"
+              className="cursor-pointer border-white/20 text-white hover:bg-white hover:text-black px-8 py-6 text-lg font-semibold rounded-full backdrop-blur-sm transition-all duration-300 transform hover:scale-105 bg-transparent"
+            >
+              <Download className="w-5 h-5 mr-2" />
+              <Link href="/Sheraz Arif.pdf" download>
+                Download CV
+              </Link>
+            </Button>
+          </motion.div>
+        </motion.div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16 max-w-4xl mx-auto">
-          {(
-            [
-              { digit: "50+", label: "Projects Completed" },
-              { digit: "3+", label: "Years Experience" },
-              { digit: "25+", label: "Happy Clients" },
-              { digit: "100%", label: "Satisfaction Rate" },
-            ] as { digit: string; label: string }[]
-          ).map((stat, index) => (
-            <div key={index} className="text-center group">
+        <motion.div
+          className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16 max-w-4xl mx-auto"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.12,
+                delayChildren: 0.9,
+              },
+            },
+          }}
+          onAnimationComplete={() => setStatsVisible(true)}
+        >
+          {[
+            { digit: "50+", label: "Projects Completed" },
+            { digit: "3+", label: "Years Experience" },
+            { digit: "25+", label: "Happy Clients" },
+            { digit: "100%", label: "Satisfaction Rate" },
+          ].map((stat, index) => (
+            <motion.div
+              key={index}
+              className="text-center group"
+              variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+              transition={{ type: "spring", stiffness: 120, damping: 16 }}
+            >
               <div className="text-3xl md:text-4xl font-bold text-white mb-2 ">
                 <CountUp
                   from={0}
-                  to={parseInt(stat.digit.replace(/\D/g, ""))} // removes all non-digits
-                  separator=","
+                  to={parseInt(stat.digit.replace(/\D/g, ""))}
+                  separator="," 
                   duration={1}
+                  startWhen={statsVisible}
                 />
                 <span className="ml-1 text-white">
                   {stat.digit.replace(/[0-9]/g, "")}
@@ -124,12 +204,12 @@ export function HeroSection() {
               <div className="text-sm text-gray-400 uppercase tracking-wider">
                 {stat.label}
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Scroll Indicator */}
-      </div>
+      </motion.div>
 
       {/* Floating Elements */}
       <div className="absolute top-20 left-10 w-2 h-2 bg-purple-400 rounded-full animate-ping"></div>
